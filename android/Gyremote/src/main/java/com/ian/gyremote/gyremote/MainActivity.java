@@ -28,11 +28,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
@@ -40,7 +36,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
     private SensorManager sManager;
-
+    private TextView tv;
 
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
@@ -59,7 +55,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         Off = (Button)findViewById(R.id.button2);
         Visible = (Button)findViewById(R.id.button3);
         list = (Button)findViewById(R.id.button4);
-
+        tv = (TextView)findViewById(R.id.textView3);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
@@ -143,9 +139,10 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
         }
 
-
-        //get a hook to the sensor service
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sManager.registerListener(this,
+                                  sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                                  SensorManager.SENSOR_DELAY_FASTEST);
 
         try {
             outStream = btSocket.getOutputStream();
@@ -200,12 +197,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
+        tv.setText("Orientation X (Roll) :"+ Float.toString(event.values[2]) +"\n"+
+                "Orientation Y (Pitch) :"+ Float.toString(event.values[1]) +"\n"+
+                "Orientation Z (Yaw) :"+ Float.toString(event.values[0]));
     }
 
-
-    public void onAccuracyChangedListener(SensorEvent event) {
-
+    @Override
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
     }
 
 }
