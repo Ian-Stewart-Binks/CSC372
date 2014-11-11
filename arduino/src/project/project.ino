@@ -46,10 +46,19 @@ void loop() {
                 analogWrite(11, 255);
             }
             if(recvChar=='r') {
+                digitalWrite(12, LOW);
+                digitalWrite(9, LOW);
+                analogWrite(3, 255);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, 255);
+            }
+       
+            if(recvChar=='b') {
                 digitalWrite(9, HIGH);
                 digitalWrite(8, HIGH);
             }
-       
         }
    
         if(Serial.available()){
