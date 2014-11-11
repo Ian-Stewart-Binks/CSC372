@@ -24,6 +24,9 @@ void setup() {
  
 } 
 
+short left = 0;
+short right = 0;
+
 void loop() { 
     digitalWrite(13,LOW); 
     char recvChar;
@@ -34,47 +37,186 @@ void loop() {
             Serial.print(recvChar);
            
             if (recvChar=='g') {
+                left = 255;
+                right = 255;
                 digitalWrite(12, HIGH);
                 digitalWrite(9, LOW);
-                analogWrite(3, 255);
+                analogWrite(3, left);
                 
                 digitalWrite(13, HIGH);
                 digitalWrite(8, LOW);
-                analogWrite(11, 255);
+                analogWrite(11, right);
             }
-            if (recvChar=='r') {
-                digitalWrite(12, LOW);
+            
+            
+            if (recvChar=='h') {
+                left = 150;
+                right = 150;
+                digitalWrite(12, HIGH);
                 digitalWrite(9, LOW);
-                analogWrite(3, 255);
+                analogWrite(3, left);
+                
+                digitalWrite(13, HIGH);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            if (recvChar=='a') {
+                left = 255;
+                right = 150;
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, HIGH);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            
+            if (recvChar=='e') {
+                left = 75;
+                right = 150;
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, HIGH);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            if (recvChar=='c') {
+                right = 150;
+                left = 255;
+            
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
                 
                 digitalWrite(13, LOW);
                 digitalWrite(8, LOW);
-                analogWrite(11, 255);
+                analogWrite(11, right);
             }
-       
+            
+            if (recvChar=='d') {
+                right = 75;
+                left = 150;
+            
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            if (recvChar=='r') {
+                right = 255;
+                left = 255;
+            
+                digitalWrite(12, LOW);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            
+            if (recvChar=='p') {
+                right = 150;
+                left = 150;
+            
+                digitalWrite(12, LOW);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            if (recvChar=='u') {
+                right = 150;
+                left = 255;
+            
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            
+            
+            if (recvChar=='x') {
+                right = 75;
+                left = 150;
+            
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            
+            
+            if (recvChar=='y') {
+                right = 150;
+                left = 255;
+            
+                digitalWrite(12, LOW);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
+            
+            if (recvChar=='z') {
+                right = 75;
+                left = 150;
+            
+                digitalWrite(12, LOW);
+                digitalWrite(9, LOW);
+                analogWrite(3, left);
+                
+                digitalWrite(13, LOW);
+                digitalWrite(8, LOW);
+                analogWrite(11, right);
+            }
+            
             if (recvChar=='b') {
                 digitalWrite(9, HIGH);
                 digitalWrite(8, HIGH);
             }
        
             if (recvChar=='l') {
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, 0);
-                
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, 255);
+                left = left - 10;
+                if (left < 0) {
+                    left = 0;
+                }
+                analogWrite(3, left);
+                analogWrite(11, right);
             }
        
             if (recvChar=='i') {
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, 255);
-                
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, 0);
+                right = right - 10;
+                if (right < 0) {
+                    right = 0;
+                }
+                analogWrite(3, left);
+                analogWrite(11, right);
             }
         }
    
