@@ -33,4 +33,11 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Turns on an LED.
+     */
+    public void turnLEDOn() {
+        
+    }
 }
