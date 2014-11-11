@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
 
     private Button On,Off,Visible,list;
     private Set<BluetoothDevice> pairedDevices;
-    private ListView lv;
     private static final String TAG = "bluetooth";
 
 
@@ -44,7 +43,7 @@ public class MainActivity extends Activity {
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private static String address;
+    private static String address = "00:6A:8E:16:C9:47";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,6 @@ public class MainActivity extends Activity {
         Off = (Button)findViewById(R.id.button2);
         Visible = (Button)findViewById(R.id.button3);
         list = (Button)findViewById(R.id.button4);
-        lv = (ListView)findViewById(R.id.listView);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
@@ -80,14 +78,8 @@ public class MainActivity extends Activity {
             address = dev.getAddress();
         }
 
-        Toast.makeText(getApplicationContext(),"Showing Paired Devices",
+        Toast.makeText(getApplicationContext(),"Connected",
                 Toast.LENGTH_SHORT).show();
-
-        final ArrayAdapter adapter = new ArrayAdapter
-                (this,android.R.layout.simple_list_item_1, list);
-
-        lv.setAdapter(adapter);
-
     }
 
     public void off(View view){
@@ -101,6 +93,9 @@ public class MainActivity extends Activity {
     }
 
     public void brake(View view){
+        sendData("b");
+    }
+    public void reverse(View view){
         sendData("r");
     }
 

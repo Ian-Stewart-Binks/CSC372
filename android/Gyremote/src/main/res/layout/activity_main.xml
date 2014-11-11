@@ -15,30 +15,35 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button1" android:layout_alignTop="@+id/textView3" android:layout_centerHorizontal="true"
-            android:onClick="on"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Button"
-            android:id="@+id/button2"
-            android:layout_centerVertical="true" android:layout_alignParentLeft="true"
-            android:onClick="goForward"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Button"
-            android:id="@+id/button3" android:layout_centerVertical="true" android:layout_alignParentRight="true"
-            android:onClick="off"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Button"
-            android:id="@+id/button4" android:layout_centerVertical="false" android:layout_alignParentRight="true"
-            android:onClick="list"/>
-    <ListView
-            android:layout_width="wrap_content"
+            android:text="BT On"
+            android:id="@+id/button1"
+            android:layout_alignTop="@+id/textView3"
+            android:onClick="on" android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listView" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:text="Forward"
+            android:id="@+id/button2"
+            android:onClick="goForward"
+            android:layout_alignBaseline="@+id/button3" android:layout_alignBottom="@+id/button3"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reverse"
+            android:id="@+id/button3" android:layout_centerVertical="true" android:layout_alignParentRight="true"
+            android:onClick="reverse"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Connect"
+            android:id="@+id/button4"
+            android:onClick="list" android:layout_alignBaseline="@+id/button3" android:layout_alignBottom="@+id/button3"
+            android:layout_centerHorizontal="true"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button5" android:layout_below="@+id/button2" android:layout_alignRight="@+id/button1"
-            android:layout_alignEnd="@+id/button4" android:layout_marginTop="107dp"
-            android:onClick="brake"/>
+            android:text="Brake"
+            android:id="@+id/button5"
+            android:onClick="brake" android:layout_alignParentBottom="true" android:layout_alignLeft="@+id/button4"
+            android:layout_alignStart="@+id/button4"/>
 
 </RelativeLayout>
