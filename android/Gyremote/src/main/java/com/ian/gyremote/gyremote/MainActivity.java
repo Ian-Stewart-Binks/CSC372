@@ -2,6 +2,10 @@ package com.ian.gyremote.gyremote;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -30,11 +34,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 
     private Button On,Off,Visible,list;
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
+    private SensorManager sManager;
 
 
     private BluetoothAdapter btAdapter = null;
@@ -138,6 +143,10 @@ public class MainActivity extends Activity {
             }
         }
 
+
+        //get a hook to the sensor service
+        sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         try {
             outStream = btSocket.getOutputStream();
         } catch (IOException e) {
@@ -187,6 +196,16 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+
+    public void onAccuracyChangedListener(SensorEvent event) {
+
     }
 
 }
