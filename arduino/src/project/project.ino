@@ -4,7 +4,7 @@
 #define uint16 unsigned int
 #define uint32 unsigned long int
 
-#define RxD 6 //Send
+#define RxD 6 // Send
 #define TxD 7 // Recieve
  
 SoftwareSerial blueToothSerial(RxD,TxD);
@@ -15,9 +15,6 @@ void setup() {
     pinMode(TxD, OUTPUT); 
     pinMode(13,OUTPUT); 
     setupBlueToothConnection(); 
- 
-    pinMode(Datapin, OUTPUT); 
-    pinMode(Clkpin, OUTPUT);
   
     pinMode(12, OUTPUT);
     pinMode(9, OUTPUT); 
@@ -31,12 +28,12 @@ void loop() {
     digitalWrite(13,LOW); 
     char recvChar;
    
-    while(1){
-        if(blueToothSerial.available()){/
+    while (1) {
+        if(blueToothSerial.available()) {
             recvChar = blueToothSerial.read();
             Serial.print(recvChar);
            
-            if(recvChar=='g'){
+            if (recvChar=='g') {
                 digitalWrite(12, HIGH);
                 digitalWrite(9, LOW);
                 analogWrite(3, 255);
@@ -45,7 +42,7 @@ void loop() {
                 digitalWrite(8, LOW);
                 analogWrite(11, 255);
             }
-            if(recvChar=='r') {
+            if (recvChar=='r') {
                 digitalWrite(12, LOW);
                 digitalWrite(9, LOW);
                 analogWrite(3, 255);
@@ -55,13 +52,33 @@ void loop() {
                 analogWrite(11, 255);
             }
        
-            if(recvChar=='b') {
+            if (recvChar=='b') {
                 digitalWrite(9, HIGH);
                 digitalWrite(8, HIGH);
             }
+       
+            if (recvChar=='l') {
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, 0);
+                
+                digitalWrite(13, HIGH);
+                digitalWrite(8, LOW);
+                analogWrite(11, 255);
+            }
+       
+            if (recvChar=='i') {
+                digitalWrite(12, HIGH);
+                digitalWrite(9, LOW);
+                analogWrite(3, 255);
+                
+                digitalWrite(13, HIGH);
+                digitalWrite(8, LOW);
+                analogWrite(11, 0);
+            }
         }
    
-        if(Serial.available()){
+        if (Serial.available()) {
             recvChar = Serial.read();
         }
    }
@@ -88,3 +105,4 @@ void setupBlueToothConnection() {
     
     blueToothSerial.flush();
 }
+
