@@ -40,10 +40,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
+
+    // Used to write to the bluetooth stream.
     private OutputStream outStream = null;
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    // MAC Address of bluetooth shield.
     private static String address = "00:6A:8E:16:C9:47";
 
     @Override
@@ -55,7 +58,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         Off = (Button)findViewById(R.id.button2);
         Visible = (Button)findViewById(R.id.button3);
         list = (Button)findViewById(R.id.button4);
+
         tv = (TextView)findViewById(R.id.textView3);
+
         btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
@@ -64,8 +69,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(turnOn, 0);
             Toast.makeText(getApplicationContext(),"Turned on", Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(getApplicationContext(),"Already on", Toast.LENGTH_LONG).show();
         }
     }
@@ -119,6 +123,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onResume() {
         super.onResume();
+
+        // Set up connection to car.
         BluetoothDevice device = btAdapter.getRemoteDevice(address);
 
         try {
@@ -152,14 +158,14 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
-        if(Build.VERSION.SDK_INT >= 10){
-            try {
-                final Method  m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
-                return (BluetoothSocket) m.invoke(device, MY_UUID);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+        try {
+            final Method  m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
+            return (BluetoothSocket) m.invoke(device, MY_UUID);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return  device.createRfcommSocketToServiceRecord(MY_UUID);
     }
 
@@ -195,8 +201,37 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
     }
 
+    int currentRoll = 0;
+    int currentPitch = 0;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
+
+        // When on flat surface, values are:
+        // ROLL:   ~0 brake then -90 is 255
+        // PITCH:  ~0
+        if (event.values[1] < 10 && event.values[1] > -10) {
+            if (event.values[2] > 25) { sendData("g"); } // Forward (fast)
+            else if (event.values[2] > 0) { sendData("h"); } // Forward (slow)
+            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); }  // Brake
+            else if (event.values[2] < -25) { sendData("r"); } // Reverse (fast)
+            else if (event.values[2] < 0) { sendData("p"); } // Reverse (slow)
+
+        } else if (event.values[1] < 25 && event.values[1] > 10) { // Left Slow
+            if (event.values[2] > 25) { sendData("a"); }  // Forward (fast)
+            else if (event.values[2] > 0) { sendData("e"); }  // Forward (slow)
+            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); } // Brake
+            else if (event.values[2] < -25) { sendData("c"); } // Reverse (fast)
+            else if (event.values[2] < 0) { sendData("d"); } // Reverse (slow)
+
+        } else if (event.values[1] > -25 && event.values[1] < -10) { // Right Slow
+            if (event.values[2] > 25) { sendData("u"); } // Forward (fast)
+            else if (event.values[2] > 0) { sendData("x"); }  // Forward (slow)
+            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); } // Brake
+            else if (event.values[2] < -25) { sendData("y"); } // Reverse (fast)
+            else if (event.values[2] < 0) { sendData("z"); } // Reverse (slow)
+
+        }
         tv.setText("Orientation X (Roll) :"+ Float.toString(event.values[2]) +"\n"+
                 "Orientation Y (Pitch) :"+ Float.toString(event.values[1]) +"\n"+
                 "Orientation Z (Yaw) :"+ Float.toString(event.values[0]));
