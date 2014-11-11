@@ -95,8 +95,17 @@ public class MainActivity extends Activity {
     public void brake(View view){
         sendData("b");
     }
-    public void reverse(View view){
+
+    public void reverse(View view) {
         sendData("r");
+    }
+
+    public void goLeft(View view) {
+        sendData("l");
+    }
+
+    public void goRight(View view) {
+        sendData("i");
     }
 
     @Override
