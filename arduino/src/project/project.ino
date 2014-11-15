@@ -9,6 +9,9 @@
  
 SoftwareSerial blueToothSerial(RxD,TxD);
 
+float compensation_right = 0.75;
+float compensation_left = 1;
+
 void setup() { 
     Serial.begin(9600);
     pinMode(RxD, INPUT); 
@@ -35,189 +38,243 @@ void loop() {
         if(blueToothSerial.available()) {
             recvChar = blueToothSerial.read();
             Serial.print(recvChar);
-           
-            if (recvChar=='g') {
-                left = 255;
-                right = 255;
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
+            switch (recvChar) {
+                // STRAIGHT
+                case 'b':
+                    digitalWrite(9, HIGH);
+                    digitalWrite(8, HIGH);
+                    
+                case 'g':
+                    left = 255 * compensation_right;
+                    right = 255;
+                    digitalWrite(12, HIGH);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, HIGH);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                case 'h':
+                    left = 150 * compensation_right;
+                    right = 150;
+                    digitalWrite(12, HIGH);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, HIGH);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                case 'r':
+                    right = 255 * compensation_right;
+                    left = 255 * compensation_right;
                 
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            
-            if (recvChar=='h') {
-                left = 150;
-                right = 150;
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
+                    digitalWrite(12, LOW);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, LOW);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                case 'p':
+                    right = 150 * compensation_right;
+                    left = 150 * compensation_right;
                 
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='a') {
-                left = 255;
-                right = 150;
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
+                    digitalWrite(12, LOW);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, LOW);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                    
+                    
+                // LEFT:
+                case '0'://a
+                    left = 150 * compensation_right;
+                    right = 255;
+                    digitalWrite(12, HIGH);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, HIGH);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                case 'e':
+                    break;
+                case 'c':
+                    break;
+                case 'd':
+                    break;
+                    
+                    
+                // RIGHT:
+                case '01': // 'u'
+                    left = 255;
+                    right = 150;
                 
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
+                    digitalWrite(12, HIGH);
+                    digitalWrite(9, LOW);
+                    analogWrite(3, left);
+                    
+                    digitalWrite(13, HIGH);
+                    digitalWrite(8, LOW);
+                    analogWrite(11, right);
+                    break;
+                case 'x':
+                    break;
+                case 'y':
+                    break;
+                case 'z':
+                    break;
             }
-            
-            
-            if (recvChar=='e') {
-                left = 75;
-                right = 150;
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, HIGH);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='c') {
-                right = 150;
-                left = 255;
-            
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='d') {
-                right = 75;
-                left = 150;
-            
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='r') {
-                right = 255;
-                left = 255;
-            
-                digitalWrite(12, LOW);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            
-            if (recvChar=='p') {
-                right = 150;
-                left = 150;
-            
-                digitalWrite(12, LOW);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='u') {
-                right = 150;
-                left = 255;
-            
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            
-            
-            if (recvChar=='x') {
-                right = 75;
-                left = 150;
-            
-                digitalWrite(12, HIGH);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            
-            
-            if (recvChar=='y') {
-                right = 150;
-                left = 255;
-            
-                digitalWrite(12, LOW);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            
-            if (recvChar=='z') {
-                right = 75;
-                left = 150;
-            
-                digitalWrite(12, LOW);
-                digitalWrite(9, LOW);
-                analogWrite(3, left);
-                
-                digitalWrite(13, LOW);
-                digitalWrite(8, LOW);
-                analogWrite(11, right);
-            }
-            
-            if (recvChar=='b') {
-                digitalWrite(9, HIGH);
-                digitalWrite(8, HIGH);
-            }
-       
-            if (recvChar=='l') {
-                left = left - 10;
-                if (left < 0) {
-                    left = 0;
-                }
-                analogWrite(3, left);
-                analogWrite(11, right);
-            }
-       
-            if (recvChar=='i') {
-                right = right - 10;
-                if (right < 0) {
-                    right = 0;
-                }
-                analogWrite(3, left);
-                analogWrite(11, right);
-            }
+//            
+//            if (recvChar=='e') {
+//                left = 75;
+//                right = 150;
+//                digitalWrite(12, HIGH);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, HIGH);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            if (recvChar=='c') {
+//                right = 150;
+//                left = 255;
+//            
+//                digitalWrite(12, HIGH);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            if (recvChar=='d') {
+//                right = 75;
+//                left = 150;
+//            
+//                digitalWrite(12, HIGH);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            if (recvChar=='r') {
+//                right = 255;
+//                left = 255;
+//            
+//                digitalWrite(12, LOW);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            
+//            if (recvChar=='p') {
+//                right = 150;
+//                left = 150;
+//            
+//                digitalWrite(12, LOW);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            if (recvChar=='u') {
+//                right = 150;
+//                left = 255;
+//            
+//                digitalWrite(12, HIGH);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            
+//            
+//            if (recvChar=='x') {
+//                right = 75;
+//                left = 150;
+//            
+//                digitalWrite(12, HIGH);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            
+//            
+//            if (recvChar=='y') {
+//                right = 150;
+//                left = 255;
+//            
+//                digitalWrite(12, LOW);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            
+//            if (recvChar=='z') {
+//                right = 75;
+//                left = 150;
+//            
+//                digitalWrite(12, LOW);
+//                digitalWrite(9, LOW);
+//                analogWrite(3, left);
+//                
+//                digitalWrite(13, LOW);
+//                digitalWrite(8, LOW);
+//                analogWrite(11, right);
+//            }
+//            
+//            if (recvChar=='b') {
+//            }
+//       
+//            if (recvChar=='l') {
+//                left = left - 10;
+//                if (left < 0) {
+//                    left = 0;
+//                }
+//                analogWrite(3, left);
+//                analogWrite(11, right);
+//            }
+//       
+//            if (recvChar=='i') {
+//                right = right - 10;
+//                if (right < 0) {
+//                    right = 0;
+//                }
+//                analogWrite(3, left);
+//                analogWrite(11, right);
+//            }
         }
    
         if (Serial.available()) {
