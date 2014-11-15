@@ -9,7 +9,7 @@
  
 SoftwareSerial blueToothSerial(RxD,TxD);
 
-float compensation_right = 0.75;
+float compensation_right = 1;
 float compensation_left = 1;
 
 void setup() { 
@@ -41,68 +41,26 @@ void loop() {
             switch (recvChar) {
                 // STRAIGHT
                 case 'b':
-                    digitalWrite(9, HIGH);
-                    digitalWrite(8, HIGH);
+                    brake();
+                    break;
                     
                 case 'g':
-                    left = 255 * compensation_right;
-                    right = 255;
-                    digitalWrite(12, HIGH);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, HIGH);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                    goForward(1);
                     break;
                 case 'h':
-                    left = 150 * compensation_right;
-                    right = 150;
-                    digitalWrite(12, HIGH);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, HIGH);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                    goForward(0);
                     break;
                 case 'r':
-                    right = 255 * compensation_right;
-                    left = 255 * compensation_right;
-                
-                    digitalWrite(12, LOW);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, LOW);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                    reverse(1);
                     break;
                 case 'p':
-                    right = 150 * compensation_right;
-                    left = 150 * compensation_right;
-                
-                    digitalWrite(12, LOW);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, LOW);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                    reverse(0);
                     break;
                     
                     
                 // LEFT:
-                case '0'://a
-                    left = 150 * compensation_right;
-                    right = 255;
-                    digitalWrite(12, HIGH);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, HIGH);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                case 'l'://a
+                    goLeft();
                     break;
                 case 'e':
                     break;
@@ -113,17 +71,8 @@ void loop() {
                     
                     
                 // RIGHT:
-                case '01': // 'u'
-                    left = 255;
-                    right = 150;
-                
-                    digitalWrite(12, HIGH);
-                    digitalWrite(9, LOW);
-                    analogWrite(3, left);
-                    
-                    digitalWrite(13, HIGH);
-                    digitalWrite(8, LOW);
-                    analogWrite(11, right);
+                case 'i': // 'u'
+                    goRight();
                     break;
                 case 'x':
                     break;
@@ -283,8 +232,71 @@ void loop() {
    }
 }
 
-void goForward() {
-  // sub routines have been causing trouble...
+void goRight() {
+    left = 0;
+    right = 255;
+    digitalWrite(12, HIGH);
+    digitalWrite(9, LOW);
+    analogWrite(3, left);
+    
+    digitalWrite(13, HIGH);
+    digitalWrite(8, LOW);
+    analogWrite(11, right);
+}
+
+
+void goLeft() {
+    left = 225;
+    right = 0;
+    digitalWrite(12, HIGH);
+    digitalWrite(9, LOW);
+    analogWrite(3, left);
+    
+    digitalWrite(13, HIGH);
+    digitalWrite(8, LOW);
+    analogWrite(11, right);
+}
+
+void goForward(int fast) {
+    if (fast == 1) {
+      left = 225;
+      right = 255;
+    } else {
+      left = 135;
+      right = 150;
+      
+    }
+    digitalWrite(12, HIGH);
+    digitalWrite(9, LOW);
+    analogWrite(3, left);
+    
+    digitalWrite(13, HIGH);
+    digitalWrite(8, LOW);
+    analogWrite(11, right);
+}
+
+void reverse(int fast) {
+    if (fast == 1) {
+        left = 225;
+        right = 255;
+    } else {
+        left = 130;
+        right = 150;
+    }
+    digitalWrite(12, LOW);
+    digitalWrite(9, LOW);
+    analogWrite(3, left);
+    
+    digitalWrite(13, LOW);
+    digitalWrite(8, LOW);
+    analogWrite(11, right);
+      
+}
+
+void brake() {
+  
+    digitalWrite(9, HIGH);
+    digitalWrite(8, HIGH);
 }
 
 void setupBlueToothConnection() {
