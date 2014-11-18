@@ -15,8 +15,7 @@ float compensation_left = 1;
 void setup() { 
     Serial.begin(9600);
     pinMode(RxD, INPUT); 
-    pinMode(TxD, OUTPUT); 
-    pinMode(13,OUTPUT); 
+    pinMode(TxD, OUTPUT);
     setupBlueToothConnection(); 
   
     pinMode(12, OUTPUT);
@@ -24,17 +23,39 @@ void setup() {
 
     pinMode(13, OUTPUT);
     pinMode(8, OUTPUT);
- 
+    
+    pinMode(2, OUTPUT);
+    pinMode(A0, INPUT);
+    digitalWrite(2, HIGH);
 } 
 
 short left = 0;
 short right = 0;
+int val = 0;
+int counter = 0;
+int frontFlag = 0;
+
 
 void loop() { 
-    digitalWrite(13,LOW); 
+    digitalWrite(13, LOW);
     char recvChar;
-   
     while (1) {
+        val = analogRead(A5);
+        if (val > 300) {
+            counter++;
+            if (counter == 10000) {
+                counter = 0;
+                blueToothSerial.print(val);
+            }
+            if (frontFlag == 0) {
+              brake();
+            }
+            frontFlag = 1;
+        } else {
+            frontFlag = 0;
+            unbrake();
+        }
+
         if(blueToothSerial.available()) {
             recvChar = blueToothSerial.read();
             Serial.print(recvChar);
@@ -45,10 +66,14 @@ void loop() {
                     break;
                     
                 case 'g':
-                    goForward(1);
+                    if (frontFlag == 0) {
+                        goForward(1);
+                    }
                     break;
                 case 'h':
-                    goForward(0);
+                    if (frontFlag == 0) {
+                        goForward(0);
+                    }  
                     break;
                 case 'r':
                     reverse(1);
@@ -60,7 +85,9 @@ void loop() {
                     
                 // LEFT:
                 case 'l'://a
-                    goLeft();
+                    if (frontFlag == 1) { 
+                        goLeft();
+                    }
                     break;
                 case 'e':
                     break;
@@ -72,7 +99,9 @@ void loop() {
                     
                 // RIGHT:
                 case 'i': // 'u'
-                    goRight();
+                    if (frontFlag == 1) { 
+                        goRight();
+                    }
                     break;
                 case 'x':
                     break;
@@ -233,8 +262,8 @@ void loop() {
 }
 
 void goRight() {
-    left = 0;
-    right = 255;
+    left = 100;
+    right = 200;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
     analogWrite(3, left);
@@ -246,8 +275,8 @@ void goRight() {
 
 
 void goLeft() {
-    left = 225;
-    right = 0;
+    left = 188;
+    right = 100;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
     analogWrite(3, left);
@@ -259,10 +288,10 @@ void goLeft() {
 
 void goForward(int fast) {
     if (fast == 1) {
-      left = 225;
-      right = 255;
+      left = 88;
+      right = 100;
     } else {
-      left = 135;
+      left = 150;
       right = 150;
       
     }
@@ -277,8 +306,8 @@ void goForward(int fast) {
 
 void reverse(int fast) {
     if (fast == 1) {
-        left = 225;
-        right = 255;
+        left = 188;
+        right = 200;
     } else {
         left = 130;
         right = 150;
@@ -297,6 +326,12 @@ void brake() {
   
     digitalWrite(9, HIGH);
     digitalWrite(8, HIGH);
+}
+
+void unbrake() {
+  
+    digitalWrite(9, LOW);
+    digitalWrite(8, LOW);
 }
 
 void setupBlueToothConnection() {
