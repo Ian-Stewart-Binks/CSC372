@@ -44,16 +44,25 @@ void loop() {
         if (val > 300) {
             counter++;
             if (counter == 10000) {
+              blueToothSerial.print("1");
                 counter = 0;
-                blueToothSerial.print(val);
             }
             if (frontFlag == 0) {
+              blueToothSerial.print("1");
               brake();
             }
             frontFlag = 1;
         } else {
+            counter++;
+            if (counter == 10000) {
+                blueToothSerial.print("0");
+                counter = 0;
+            }
+            if (frontFlag == 1) {
+                blueToothSerial.print("0");
+                unbrake();
+            }
             frontFlag = 0;
-            unbrake();
         }
 
         if(blueToothSerial.available()) {
@@ -85,7 +94,7 @@ void loop() {
                     
                 // LEFT:
                 case 'l'://a
-                    if (frontFlag == 1) { 
+                    if (frontFlag == 0) { 
                         goLeft();
                     }
                     break;
@@ -99,7 +108,7 @@ void loop() {
                     
                 // RIGHT:
                 case 'i': // 'u'
-                    if (frontFlag == 1) { 
+                    if (frontFlag == 0) { 
                         goRight();
                     }
                     break;
@@ -306,8 +315,8 @@ void goForward(int fast) {
 
 void reverse(int fast) {
     if (fast == 1) {
-        left = 188;
-        right = 200;
+        left = 128;
+        right = 150;
     } else {
         left = 130;
         right = 150;
