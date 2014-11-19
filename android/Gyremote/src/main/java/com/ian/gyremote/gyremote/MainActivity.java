@@ -29,10 +29,12 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.*;
+import android.graphics.Color;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
     private Button something, forward, reverse, list, brake, right, left;
+    private ImageView frontIndicator;
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
     private SensorManager sManager;
@@ -64,7 +66,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        frontIndicator = (ImageView)findViewById(R.id.imageView3);
         something = (Button)findViewById(R.id.button1);
         forward = (Button)findViewById(R.id.button2);
         reverse = (Button)findViewById(R.id.button3);
@@ -83,6 +85,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             public void run() {
                 final byte[] buffer = new byte[1024];
                 int bytes; // bytes returned from read()
+
                 while (true) {
 
                     try {
@@ -97,7 +100,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                                     try {
 
                                         String decoded = new String(buffer, "UTF-8");
-                                        tv.setText(decoded);
+//                                        tv.setText(decoded);
+                                        if (decoded.charAt(0) == '0') {
+                                            frontIndicator.setBackgroundColor(Color.BLUE);
+                                        } else {
+                                            frontIndicator.setBackgroundColor(Color.RED);
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
