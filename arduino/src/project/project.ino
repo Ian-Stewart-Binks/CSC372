@@ -33,13 +33,24 @@ short left = 0;
 short right = 0;
 int frontVal = 0;
 int backVal = 0;
+int rightVal = 0;
+int leftVal = 0;
 int frontCounter = 0;
 int backCounter = 0;
+
+int rightCounter = 0;
+int leftCounter = 0;
+
 int frontFlag = 0;
 int backFlag = 0;
 
+int leftFlag = 0;
+int rightFlag = 0;
+
 int forwardFlag = 0;
 int reverseFlag = 0;
+
+int autopilot = 0;
 
 
 void loop() { 
@@ -47,45 +58,97 @@ void loop() {
     char recvChar;
     while (1) {
         frontVal = analogRead(A5);
-        backVal = analogRead(A4);
-        //Serial.println(frontVal);
-//        rightVal = analogRead(A4);
-//        leftVal = analogRead(A4);
+        backVal  = analogRead(A4);
+        rightVal = analogRead(A3);
+        leftVal  = analogRead(A2);
+        //Serial.println(rightVal);
+        //Serial.println(leftVal);
 
 
         frontCounter++;
         backCounter++;
+
+        rightCounter++;
+        leftCounter++;
         
         if (frontVal > 400) {
-            if (frontCounter > 10000) {
+            if (frontCounter > 1000) {
                 blueToothSerial.print("1");
                 Serial.println("1");
                 frontCounter = 0;
             }
             if (frontFlag == 0) {
                 blueToothSerial.print("1");
-                Serial.println("1");
+                
                 brake();
+                
+                if (autopilot == 1) {
+                    reverse(1);
+                }
+                
                 frontFlag = 1;
             }
         }
         
          
        if (backVal > 400) {
-            if (backCounter > 10000) {
+            if (backCounter > 1000) {
                 blueToothSerial.print("3");
                 backCounter = 0;
             }
             if (backFlag == 0) {
               blueToothSerial.print("3");
+              
               brake();
+              if (autopilot == 1) {
+                  goForward(1);
+              }
               backFlag = 1;
             }
         
        } 
        
-       if (backVal < 300 && frontVal < 300) {
+       if (rightVal > 400) {
+            if (rightCounter > 1000) {
+                blueToothSerial.print("5");
+                Serial.print("5");
+                Serial.println("5");
+                rightCounter = 0;
+            }
+            if (rightFlag == 0) {
+                blueToothSerial.print("5");
+                Serial.print("5");
+                Serial.println("5");
+                brake();
+                if (autopilot == 1) {
+                    reverse(1);
+                }
+                rightFlag = 1;
+            }
+        }
+        
+         
+       if (leftVal > 400) {
+            if (leftCounter > 1000) {
+                blueToothSerial.print("7");
+                leftCounter = 0;
+            }
+            if (leftFlag == 0) {
+              blueToothSerial.print("7");
+              brake();
+              if (autopilot == 1) {
+                    reverse(1);
+              }
+              leftFlag = 1;
+            }
+        
+       } 
+       
+       
+       if (backVal < 300 && frontVal < 300 && leftVal < 300 && rightVal < 300) {
             if (frontFlag == 1 || backFlag == 1) {
+                blueToothSerial.print("6");
+                blueToothSerial.print("4");
                 blueToothSerial.print("2");
                 blueToothSerial.print("0");
                 Serial.println("0");
@@ -93,35 +156,84 @@ void loop() {
             }
             backFlag = 0;
             frontFlag = 0;
+            rightFlag = 0;
+            leftFlag = 0;
         } 
         
         if (backVal < 300) {
-            if (backCounter > 10000) {
+            if (backCounter > 1000) {
                 blueToothSerial.print("2");
                 backCounter = 0;
+            }
+            
+            if (backFlag == 1) {
+                blueToothSerial.print("2");
             }
             backFlag = 0;
         }
         
         if (frontVal < 300) {
-            if (frontCounter > 10000) {
+            if (frontCounter > 1000) {
                 blueToothSerial.print("0");
-                Serial.println("0");
                 frontCounter = 0;
             }
+            
+            if (frontFlag == 1) {
+                blueToothSerial.print("0");
+            }
             frontFlag = 0;
+        }
+        
+        if (rightVal < 300) {
+            if (rightCounter > 1000) {
+                blueToothSerial.print("4");
+                Serial.print("4");
+                rightCounter = 0;
+            }
+            
+            if (rightFlag == 1) {
+                blueToothSerial.print("4");
+            }
+            rightFlag = 0;
+        }
+        
+        if (leftVal < 300) {
+            if (leftCounter > 1000) {
+                blueToothSerial.print("6");
+                leftCounter = 0;
+            }
+            
+            if (leftFlag == 1) {
+                blueToothSerial.print("6");
+            }
+            leftFlag = 0;
         }
 
         if(blueToothSerial.available()) {
             recvChar = blueToothSerial.read();
             switch (recvChar) {
+                case 'A':
+                   if (autopilot == 0) {
+                         
+                       autopilot = 1;
+                       if (frontFlag == 0 && leftFlag == 0 && rightFlag == 0) {
+                            goForward(1);
+                       } else if (backFlag == 0) {
+                            reverse(1);
+                       }
+                   } else {
+                       autopilot = 0;
+                       brake();
+                   }
+                  
+                   break;
                 // STRAIGHT
                 case 'b':
                     brake();
                     break;
                     
                 case 'g':
-                    if (frontFlag == 0) {
+                    if (frontFlag == 0 && leftFlag == 0 && rightFlag == 0) {
                         goForward(1);
                     }
                     break;
