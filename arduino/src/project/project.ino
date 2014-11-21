@@ -31,43 +31,89 @@ void setup() {
 
 short left = 0;
 short right = 0;
-int val = 0;
-int counter = 0;
+int frontVal = 0;
+int backVal = 0;
+int frontCounter = 0;
+int backCounter = 0;
 int frontFlag = 0;
+int backFlag = 0;
+
+int forwardFlag = 0;
+int reverseFlag = 0;
 
 
 void loop() { 
     digitalWrite(13, LOW);
     char recvChar;
     while (1) {
-        val = analogRead(A5);
-        if (val > 300) {
-            counter++;
-            if (counter == 10000) {
-              blueToothSerial.print("1");
-                counter = 0;
+        frontVal = analogRead(A5);
+        backVal = analogRead(A4);
+        //Serial.println(frontVal);
+//        rightVal = analogRead(A4);
+//        leftVal = analogRead(A4);
+
+
+        frontCounter++;
+        backCounter++;
+        
+        if (frontVal > 400) {
+            if (frontCounter > 10000) {
+                blueToothSerial.print("1");
+                Serial.println("1");
+                frontCounter = 0;
             }
             if (frontFlag == 0) {
-              blueToothSerial.print("1");
+                blueToothSerial.print("1");
+                Serial.println("1");
+                brake();
+                frontFlag = 1;
+            }
+        }
+        
+         
+       if (backVal > 400) {
+            if (backCounter > 10000) {
+                blueToothSerial.print("3");
+                backCounter = 0;
+            }
+            if (backFlag == 0) {
+              blueToothSerial.print("3");
               brake();
+              backFlag = 1;
             }
-            frontFlag = 1;
-        } else {
-            counter++;
-            if (counter == 10000) {
+        
+       } 
+       
+       if (backVal < 300 && frontVal < 300) {
+            if (frontFlag == 1 || backFlag == 1) {
+                blueToothSerial.print("2");
                 blueToothSerial.print("0");
-                counter = 0;
-            }
-            if (frontFlag == 1) {
-                blueToothSerial.print("0");
+                Serial.println("0");
                 unbrake();
+            }
+            backFlag = 0;
+            frontFlag = 0;
+        } 
+        
+        if (backVal < 300) {
+            if (backCounter > 10000) {
+                blueToothSerial.print("2");
+                backCounter = 0;
+            }
+            backFlag = 0;
+        }
+        
+        if (frontVal < 300) {
+            if (frontCounter > 10000) {
+                blueToothSerial.print("0");
+                Serial.println("0");
+                frontCounter = 0;
             }
             frontFlag = 0;
         }
 
         if(blueToothSerial.available()) {
             recvChar = blueToothSerial.read();
-            Serial.print(recvChar);
             switch (recvChar) {
                 // STRAIGHT
                 case 'b':
@@ -85,10 +131,14 @@ void loop() {
                     }  
                     break;
                 case 'r':
-                    reverse(1);
+                    if (backFlag == 0) {
+                        reverse(1);
+                    } 
                     break;
                 case 'p':
-                    reverse(0);
+                    if (backFlag == 0) {
+                        reverse(0);
+                    }
                     break;
                     
                     
@@ -295,13 +345,25 @@ void goLeft() {
     analogWrite(11, right);
 }
 
+void stopForward() {
+    left = 0;
+    right = 0;
+    digitalWrite(12, HIGH);
+    digitalWrite(9, LOW);
+    analogWrite(3, left);
+    
+    digitalWrite(13, HIGH);
+    digitalWrite(8, LOW);
+    analogWrite(11, right);
+}
+
 void goForward(int fast) {
     if (fast == 1) {
       left = 88;
       right = 100;
     } else {
-      left = 150;
-      right = 150;
+      left = 255;
+      right = 255;
       
     }
     digitalWrite(12, HIGH);
@@ -315,11 +377,11 @@ void goForward(int fast) {
 
 void reverse(int fast) {
     if (fast == 1) {
-        left = 128;
-        right = 150;
+        left = 88;
+        right = 100;
     } else {
-        left = 130;
-        right = 150;
+        left = 255;
+        right = 255;
     }
     digitalWrite(12, LOW);
     digitalWrite(9, LOW);
@@ -332,13 +394,11 @@ void reverse(int fast) {
 }
 
 void brake() {
-  
     digitalWrite(9, HIGH);
     digitalWrite(8, HIGH);
 }
 
 void unbrake() {
-  
     digitalWrite(9, LOW);
     digitalWrite(8, LOW);
 }
