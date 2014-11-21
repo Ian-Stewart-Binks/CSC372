@@ -34,7 +34,7 @@ import android.graphics.Color;
 public class MainActivity extends Activity implements SensorEventListener {
 
     private Button something, forward, reverse, list, brake, right, left;
-    private ImageView frontIndicator, backIndicator;
+    private ImageView frontIndicator, backIndicator, leftIndicator, rightIndicator;
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
     private SensorManager sManager;
@@ -74,6 +74,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         brake = (Button)findViewById(R.id.button5);
         right = (Button)findViewById(R.id.button6);
         left = (Button)findViewById(R.id.button);
+        rightIndicator = (ImageView)findViewById(R.id.imageView2);
+        leftIndicator = (ImageView)findViewById(R.id.imageView4);
         backIndicator = (ImageView)findViewById(R.id.imageView);
 
         tv = (TextView)findViewById(R.id.textView3);
@@ -110,6 +112,14 @@ public class MainActivity extends Activity implements SensorEventListener {
                                             backIndicator.setBackgroundColor(Color.BLUE);
                                         } else if (decoded.charAt(0) == '3') {
                                             backIndicator.setBackgroundColor(Color.RED);
+                                        } else if (decoded.charAt(0) == '4') {
+                                            rightIndicator.setBackgroundColor(Color.BLUE);
+                                        } else if (decoded.charAt(0) == '5') {
+                                            rightIndicator.setBackgroundColor(Color.RED);
+                                        } else if (decoded.charAt(0) == '6') {
+                                            leftIndicator.setBackgroundColor(Color.BLUE);
+                                        } else if (decoded.charAt(0) == '7') {
+                                            leftIndicator.setBackgroundColor(Color.RED);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -128,13 +138,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void on(View view){
-        if (!btAdapter.isEnabled()) {
-            Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnOn, 0);
-            Toast.makeText(getApplicationContext(),"Turned on", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(),"Already on", Toast.LENGTH_LONG).show();
-        }
+        sendData("A");
     }
 
     public void list(View view){
