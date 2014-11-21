@@ -34,7 +34,7 @@ import android.graphics.Color;
 public class MainActivity extends Activity implements SensorEventListener {
 
     private Button something, forward, reverse, list, brake, right, left;
-    private ImageView frontIndicator;
+    private ImageView frontIndicator, backIndicator;
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
     private SensorManager sManager;
@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         brake = (Button)findViewById(R.id.button5);
         right = (Button)findViewById(R.id.button6);
         left = (Button)findViewById(R.id.button);
+        backIndicator = (ImageView)findViewById(R.id.imageView);
 
         tv = (TextView)findViewById(R.id.textView3);
 
@@ -103,8 +104,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 //                                        tv.setText(decoded);
                                         if (decoded.charAt(0) == '0') {
                                             frontIndicator.setBackgroundColor(Color.BLUE);
-                                        } else {
+                                        } else if (decoded.charAt(0) == '1') {
                                             frontIndicator.setBackgroundColor(Color.RED);
+                                        } else if (decoded.charAt(0) == '2') {
+                                            backIndicator.setBackgroundColor(Color.BLUE);
+                                        } else if (decoded.charAt(0) == '3') {
+                                            backIndicator.setBackgroundColor(Color.RED);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -272,9 +277,10 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private void sendData(String message) {
-        if (message == currentChar) {
-            return;
-        }
+        // BUG
+//        if (message == currentChar) {
+//            return;
+//        }
         currentChar = message;
         byte[] msgBuffer = message.getBytes();
 
