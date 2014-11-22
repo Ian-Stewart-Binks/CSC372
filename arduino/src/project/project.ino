@@ -47,11 +47,16 @@ int backFlag = 0;
 int leftFlag = 0;
 int rightFlag = 0;
 
+int autoLeftFlag = 0;
+int autoRightFlag = 0;
+
 int forwardFlag = 0;
 int reverseFlag = 0;
 
 int autopilot = 0;
-
+int reverseCounter = 0;
+int turnCounter = 0;
+int turnFlag = 0;
 
 void loop() { 
     digitalWrite(13, LOW);
@@ -67,9 +72,41 @@ void loop() {
 
         frontCounter++;
         backCounter++;
-
+        if (reverseFlag) { 
+            reverseCounter++;
+        }
+        if (turnFlag) {
+          turnCounter++;  
+        }
         rightCounter++;
         leftCounter++;
+        
+        if (autopilot == 1 && reverseCounter == 2000 && reverseFlag) {
+            reverseCounter = 0;
+            if (autoLeftFlag == 1 && autoRightFlag == 0) {
+                if (frontFlag == 0) { 
+                    goRight();
+                }
+            } else if (autoLeftFlag == 0 && autoRightFlag == 1) {
+                if (frontFlag == 0) { 
+                    goLeft();
+                }
+            } else if (autoLeftFlag == 0 && autoRightFlag == 0) {
+                if (frontFlag == 0) { 
+                    goRight();
+                }
+            
+            }
+            
+            autoRightFlag = 0;
+            autoLeftFlag = 0;
+        }
+        
+        if (autopilot == 1 && turnCounter == 1000 && turnFlag) {
+            turnFlag = 0;
+            goForward(1);
+        }
+        
         
         if (frontVal > 400) {
             if (frontCounter > 1000) {
@@ -124,6 +161,7 @@ void loop() {
                     reverse(1);
                 }
                 rightFlag = 1;
+                autoRightFlag = 1;
             }
         }
         
@@ -140,6 +178,7 @@ void loop() {
                     reverse(1);
               }
               leftFlag = 1;
+              autoLeftFlag = 1;
             }
         
        } 
@@ -213,6 +252,8 @@ void loop() {
             recvChar = blueToothSerial.read();
             switch (recvChar) {
                 case 'A':
+                   autoLeftFlag = 0;
+                   autoRightFlag = 0;
                    if (autopilot == 0) {
                          
                        autopilot = 1;
@@ -433,8 +474,11 @@ void loop() {
 }
 
 void goRight() {
+    turnFlag = 1;
+    turnCounter = 0;
     left = 100;
     right = 200;
+    reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
     analogWrite(3, left);
@@ -446,8 +490,11 @@ void goRight() {
 
 
 void goLeft() {
+    turnFlag = 1;
+    turnCounter = 0;
     left = 188;
     right = 100;
+    reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
     analogWrite(3, left);
@@ -470,14 +517,16 @@ void stopForward() {
 }
 
 void goForward(int fast) {
+    turnFlag = 0;
     if (fast == 1) {
-      left = 88;
-      right = 100;
+      left = 118;
+      right = 130;
     } else {
       left = 255;
       right = 255;
       
     }
+    reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
     analogWrite(3, left);
@@ -488,13 +537,16 @@ void goForward(int fast) {
 }
 
 void reverse(int fast) {
+    turnFlag = 0;
+    reverseCounter = 0;
     if (fast == 1) {
-        left = 88;
-        right = 100;
+        left = 118;
+        right = 130;
     } else {
         left = 255;
         right = 255;
     }
+    reverseFlag = 1;
     digitalWrite(12, LOW);
     digitalWrite(9, LOW);
     analogWrite(3, left);
