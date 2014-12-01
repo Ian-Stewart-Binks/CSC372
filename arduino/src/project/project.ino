@@ -12,6 +12,8 @@ SoftwareSerial blueToothSerial(RxD,TxD);
 float compensation_right = 1;
 float compensation_left = 1;
 
+int lightOn = 0;
+
 void setup() { 
     Serial.begin(9600);
     pinMode(RxD, INPUT); 
@@ -23,6 +25,9 @@ void setup() {
 
     pinMode(13, OUTPUT);
     pinMode(8, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    digitalWrite(4, LOW);
     
     pinMode(2, OUTPUT);
     pinMode(A0, INPUT);
@@ -37,7 +42,7 @@ int rightVal = 0;
 int leftVal = 0;
 int frontCounter = 0;
 int backCounter = 0;
-
+int disable = 0;
 int rightCounter = 0;
 int leftCounter = 0;
 
@@ -96,6 +101,10 @@ void loop() {
                     goRight();
                 }
             
+            } else if (autoLeftFlag == 1 && autoRightFlag == 1) {
+                if (frontFlag == 0) {
+                    goRight();
+                }
             }
             
             autoRightFlag = 0;
@@ -274,17 +283,12 @@ void loop() {
                     break;
                     
                 case 'g':
-                    if (frontFlag == 0 && leftFlag == 0 && rightFlag == 0) {
+                    if (frontFlag == 0 && leftFlag == 0 && rightFlag == 0 && disable == 0) {
                         goForward(1);
                     }
                     break;
-                case 'h':
-                    if (frontFlag == 0) {
-                        goForward(0);
-                    }  
-                    break;
                 case 'r':
-                    if (backFlag == 0) {
+                    if (backFlag == 0 && disable == 0) {
                         reverse(1);
                     } 
                     break;
@@ -297,174 +301,37 @@ void loop() {
                     
                 // LEFT:
                 case 'l'://a
-                    if (frontFlag == 0) { 
+                    if (frontFlag == 0 && leftFlag == 0  && rightFlag == 0  && disable == 0) { 
                         goLeft();
                     }
-                    break;
-                case 'e':
-                    break;
-                case 'c':
-                    break;
-                case 'd':
                     break;
                     
                     
                 // RIGHT:
                 case 'i': // 'u'
-                    if (frontFlag == 0) { 
+                    if (frontFlag == 0 && rightFlag == 0 && leftFlag == 0  && disable == 0) { 
                         goRight();
                     }
                     break;
-                case 'x':
+                    
+                case 'o':
+                    if (lightOn == 0) {
+                        digitalWrite(5, HIGH);
+                        lightOn = 1;
+                    } else {
+                        digitalWrite(5, LOW);
+                        lightOn = 0;
+                    }
                     break;
-                case 'y':
-                    break;
-                case 'z':
-                    break;
+                case '9':
+                    if (disable == 1) {
+                        disable = 0;
+                    } else {
+                        disable = 1;
+                    }
+                    
+                    
             }
-//            
-//            if (recvChar=='e') {
-//                left = 75;
-//                right = 150;
-//                digitalWrite(12, HIGH);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, HIGH);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            if (recvChar=='c') {
-//                right = 150;
-//                left = 255;
-//            
-//                digitalWrite(12, HIGH);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            if (recvChar=='d') {
-//                right = 75;
-//                left = 150;
-//            
-//                digitalWrite(12, HIGH);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            if (recvChar=='r') {
-//                right = 255;
-//                left = 255;
-//            
-//                digitalWrite(12, LOW);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            
-//            if (recvChar=='p') {
-//                right = 150;
-//                left = 150;
-//            
-//                digitalWrite(12, LOW);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            if (recvChar=='u') {
-//                right = 150;
-//                left = 255;
-//            
-//                digitalWrite(12, HIGH);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            
-//            
-//            if (recvChar=='x') {
-//                right = 75;
-//                left = 150;
-//            
-//                digitalWrite(12, HIGH);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            
-//            
-//            if (recvChar=='y') {
-//                right = 150;
-//                left = 255;
-//            
-//                digitalWrite(12, LOW);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            
-//            if (recvChar=='z') {
-//                right = 75;
-//                left = 150;
-//            
-//                digitalWrite(12, LOW);
-//                digitalWrite(9, LOW);
-//                analogWrite(3, left);
-//                
-//                digitalWrite(13, LOW);
-//                digitalWrite(8, LOW);
-//                analogWrite(11, right);
-//            }
-//            
-//            if (recvChar=='b') {
-//            }
-//       
-//            if (recvChar=='l') {
-//                left = left - 10;
-//                if (left < 0) {
-//                    left = 0;
-//                }
-//                analogWrite(3, left);
-//                analogWrite(11, right);
-//            }
-//       
-//            if (recvChar=='i') {
-//                right = right - 10;
-//                if (right < 0) {
-//                    right = 0;
-//                }
-//                analogWrite(3, left);
-//                analogWrite(11, right);
-//            }
         }
    
         if (Serial.available()) {
@@ -476,8 +343,8 @@ void loop() {
 void goRight() {
     turnFlag = 1;
     turnCounter = 0;
-    left = 100;
-    right = 200;
+    left = 50;
+    right = 150;
     reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
@@ -492,8 +359,8 @@ void goRight() {
 void goLeft() {
     turnFlag = 1;
     turnCounter = 0;
-    left = 188;
-    right = 100;
+    left = 138;
+    right = 50;
     reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
