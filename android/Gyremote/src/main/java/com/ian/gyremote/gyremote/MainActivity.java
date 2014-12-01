@@ -33,7 +33,7 @@ import android.graphics.Color;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
-    private Button something, forward, reverse, list, brake, right, left;
+    private Button something, forward, reverse, list, brake, right, left, light;
     private ImageView frontIndicator, backIndicator, leftIndicator, rightIndicator;
     private Set<BluetoothDevice> pairedDevices;
     private static final String TAG = "bluetooth";
@@ -72,13 +72,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         reverse = (Button)findViewById(R.id.button3);
         list = (Button)findViewById(R.id.button4);
         brake = (Button)findViewById(R.id.button5);
-        right = (Button)findViewById(R.id.button6);
-        left = (Button)findViewById(R.id.button);
+        light = (Button)findViewById(R.id.button7);
         rightIndicator = (ImageView)findViewById(R.id.imageView2);
         leftIndicator = (ImageView)findViewById(R.id.imageView4);
         backIndicator = (ImageView)findViewById(R.id.imageView);
-
-        tv = (TextView)findViewById(R.id.textView3);
+        tv = (TextView)findViewById(R.id.textView);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -141,6 +139,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         sendData("A");
     }
 
+    public void lightsOn(View view) {
+        sendData("o");
+    }
+
+    public void disable(View view) {
+        sendData("9");
+    }
+
     public void list(View view){
         pairedDevices = btAdapter.getBondedDevices();
 
@@ -164,7 +170,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     }
 
-    public void goForward(View view){
+    public void goForward(){
         sendData("g");
     }
 
@@ -172,15 +178,15 @@ public class MainActivity extends Activity implements SensorEventListener {
         sendData("b");
     }
 
-    public void reverse(View view) {
+    public void reverse() {
         sendData("r");
     }
 
-    public void goLeft(View view) {
+    public void goLeft() {
         sendData("l");
     }
 
-    public void goRight(View view) {
+    public void goRight() {
         sendData("i");
     }
 
@@ -303,6 +309,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        char memoryVal = '0';
+        tv.setText("" + (event.values[2]));
+
+
+        if (event.values[2] > 30) {
+            goLeft();
+        } else if (event.values[2] < -30) {
+            goRight();
+        } else if (event.values[1] > 10) {
+            goForward();
+        } else if (event.values[1] < -10) {
+            reverse();
+        }
+
+//        if (event.values[2])
+
 //
 //        // When on flat surface, values are:
 //        // ROLL:   ~0 brake then -90 is 255
