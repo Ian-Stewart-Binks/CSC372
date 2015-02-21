@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             @Override
             public void run() {
                 final byte[] buffer = new byte[1024];
-                int bytes; // bytes returned from read()
+                int bytes;
 
                 while (true) {
 
@@ -101,7 +101,6 @@ public class MainActivity extends Activity implements SensorEventListener {
                                     try {
 
                                         String decoded = new String(buffer, "UTF-8");
-//                                        tv.setText(decoded);
                                         if (decoded.charAt(0) == '0') {
                                             frontIndicator.setBackgroundColor(Color.BLUE);
                                         } else if (decoded.charAt(0) == '1') {
@@ -126,7 +125,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                             });
 
                         }
-                        // Send the obtained bytes to the UI activity
+                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -198,19 +197,14 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void run2() {
-        byte[] buffer = new byte[1024];  // buffer store for the stream
-        int bytes; // bytes returned from read()
-
-        // Keep listening to the InputStream until an exception occurs
+        byte[] buffer = new byte[1024];
+        int bytes; 
         while (true) {
             try {
-                // Read from the InputStream
                 if (inputStream != null) {
                     bytes = inputStream.read(buffer);
-                    tv.setText(bytes+"");
-
+                    tv.setText(bytes + "");
                 }
-                // Send the obtained bytes to the UI activity
             } catch (IOException e) {
                 break;
             }
@@ -287,10 +281,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private void sendData(String message) {
-        // BUG
-//        if (message == currentChar) {
-//            return;
-//        }
         currentChar = message;
         byte[] msgBuffer = message.getBytes();
 
@@ -322,55 +312,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         } else if (event.values[1] < -10) {
             reverse();
         }
-
-//        if (event.values[2])
-
-//
-//        // When on flat surface, values are:
-//        // ROLL:   ~0 brake then -90 is 255
-//        // PITCH:  ~0
-//
-//        // PROTOCOL:
-//        // STRAIGHT:
-//        // g: FORWARD FAST
-//        // h: FORWARD SLOW
-//        // r: REVERSE FAST
-//        // p: REVERSE SLOW
-//        // LEFT:
-//        // a: FORWARD FAST
-//        // e: FORWARD SLOW
-//        // c: REVERSE FAST
-//        // d: REVERSE SLOW
-//        // RIGHT:
-//        // u: FORWARD FAST
-//        // x: FORWARD SLOW
-//        // y: REVERSE FAST
-//        // z: REVERSE SLOW
-//        if (event.values[1] < 10 && event.values[1] > -10) {
-//            if (event.values[2] > 25) { sendData("g"); } // Forward (fast)
-//            else if (event.values[2] > 0) { sendData("h"); } // Forward (slow)
-//            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); }  // Brake
-//            else if (event.values[2] < -25) { sendData("r"); } // Reverse (fast)
-//            else if (event.values[2] < 0) { sendData("p"); } // Reverse (slow)
-//
-//        } else if (event.values[1] < 25 && event.values[1] > 10) { // Left Slow
-//            if (event.values[2] > 25) { sendData("a"); }  // Forward (fast)
-//            else if (event.values[2] > 0) { sendData("e"); }  // Forward (slow)
-//            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); } // Brake
-//            else if (event.values[2] < -25) { sendData("c"); } // Reverse (fast)
-//            else if (event.values[2] < 0) { sendData("d"); } // Reverse (slow)
-//
-//        } else if (event.values[1] > -25 && event.values[1] < -10) { // Right Slow
-//            if (event.values[2] > 25) { sendData("u"); } // Forward (fast)
-//            else if (event.values[2] > 0) { sendData("x"); }  // Forward (slow)
-//            else if (event.values[2] < 0 && event.values[2] > -1) { sendData("b"); } // Brake
-//            else if (event.values[2] < -25) { sendData("y"); } // Reverse (fast)
-//            else if (event.values[2] < 0) { sendData("z"); } // Reverse (slow)
-//
-//        }
-//        tv.setText("Orientation X (Roll) :"+ Float.toString(event.values[2]) +"\n"+
-//                "Orientation Y (Pitch) :"+ Float.toString(event.values[1]) +"\n"+
-//                "Orientation Z (Yaw) :"+ Float.toString(event.values[0]));
     }
 
     @Override
