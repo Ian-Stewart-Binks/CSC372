@@ -10,7 +10,7 @@
 SoftwareSerial blueToothSerial(RxD,TxD);
 
 float compensation_right = 1;
-float compensation_left = 1;
+float compensation_left  = 1;
 
 int lightOn = 0;
 
@@ -21,47 +21,48 @@ void setup() {
     setupBlueToothConnection(); 
   
     pinMode(12, OUTPUT);
-    pinMode(9, OUTPUT); 
+    pinMode(9,  OUTPUT); 
 
     pinMode(13, OUTPUT);
-    pinMode(8, OUTPUT);
-    pinMode(4, OUTPUT);
-    pinMode(5, OUTPUT);
+    pinMode(8,  OUTPUT);
+    pinMode(4,  OUTPUT);
+    pinMode(5,  OUTPUT);
     digitalWrite(4, LOW);
     
-    pinMode(2, OUTPUT);
+    pinMode(2,  OUTPUT);
     pinMode(A0, INPUT);
+    
     digitalWrite(2, HIGH);
-} 
+}
 
-short left = 0;
-short right = 0;
-int frontVal = 0;
-int backVal = 0;
-int rightVal = 0;
-int leftVal = 0;
-int frontCounter = 0;
-int backCounter = 0;
-int disable = 0;
-int rightCounter = 0;
-int leftCounter = 0;
+short left         = 0;
+short right        = 0;
+int frontVal       = 0;
+int backVal        = 0;
+int rightVal       = 0;
+int leftVal        = 0;
+int frontCounter   = 0;
+int backCounter    = 0;
+int disable        = 0;
+int rightCounter   = 0;
+int leftCounter    = 0;
 
-int frontFlag = 0;
-int backFlag = 0;
+int frontFlag      = 0;
+int backFlag       = 0;
 
-int leftFlag = 0;
-int rightFlag = 0;
+int leftFlag       = 0;
+int rightFlag      = 0;
 
-int autoLeftFlag = 0;
-int autoRightFlag = 0;
+int autoLeftFlag   = 0;
+int autoRightFlag  = 0;
 
-int forwardFlag = 0;
-int reverseFlag = 0;
+int forwardFlag    = 0;
+int reverseFlag    = 0;
 
-int autopilot = 0;
+int autopilot      = 0;
 int reverseCounter = 0;
-int turnCounter = 0;
-int turnFlag = 0;
+int turnCounter    = 0;
+int turnFlag       = 0;
 
 void loop() { 
     digitalWrite(13, LOW);
@@ -71,18 +72,18 @@ void loop() {
         backVal  = analogRead(A4);
         rightVal = analogRead(A3);
         leftVal  = analogRead(A2);
-        //Serial.println(rightVal);
-        //Serial.println(leftVal);
-
 
         frontCounter++;
         backCounter++;
+        
         if (reverseFlag) { 
             reverseCounter++;
         }
+        
         if (turnFlag) {
           turnCounter++;  
         }
+        
         rightCounter++;
         leftCounter++;
         
@@ -108,7 +109,7 @@ void loop() {
             }
             
             autoRightFlag = 0;
-            autoLeftFlag = 0;
+            autoLeftFlag  = 0;
         }
         
         if (autopilot == 1 && turnCounter == 1000 && turnFlag) {
@@ -169,7 +170,7 @@ void loop() {
                 if (autopilot == 1) {
                     reverse(1);
                 }
-                rightFlag = 1;
+                rightFlag     = 1;
                 autoRightFlag = 1;
             }
         }
@@ -186,7 +187,7 @@ void loop() {
               if (autopilot == 1) {
                     reverse(1);
               }
-              leftFlag = 1;
+              leftFlag     = 1;
               autoLeftFlag = 1;
             }
         
@@ -329,8 +330,6 @@ void loop() {
                     } else {
                         disable = 1;
                     }
-                    
-                    
             }
         }
    
@@ -341,10 +340,10 @@ void loop() {
 }
 
 void goRight() {
-    turnFlag = 1;
+    turnFlag    = 1;
     turnCounter = 0;
-    left = 50;
-    right = 150;
+    left        = 50;
+    right       = 150;
     reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
@@ -357,10 +356,10 @@ void goRight() {
 
 
 void goLeft() {
-    turnFlag = 1;
+    turnFlag    = 1;
     turnCounter = 0;
-    left = 138;
-    right = 50;
+    left        = 138;
+    right       = 50;
     reverseFlag = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
@@ -372,7 +371,7 @@ void goLeft() {
 }
 
 void stopForward() {
-    left = 0;
+    left  = 0;
     right = 0;
     digitalWrite(12, HIGH);
     digitalWrite(9, LOW);
@@ -386,20 +385,20 @@ void stopForward() {
 void goForward(int fast) {
     turnFlag = 0;
     if (fast == 1) {
-      left = 118;
+      left  = 118;
       right = 130;
     } else {
-      left = 255;
+      left  = 255;
       right = 255;
       
     }
     reverseFlag = 0;
     digitalWrite(12, HIGH);
-    digitalWrite(9, LOW);
+    digitalWrite(9,  LOW);
     analogWrite(3, left);
     
     digitalWrite(13, HIGH);
-    digitalWrite(8, LOW);
+    digitalWrite(8,  LOW);
     analogWrite(11, right);
 }
 
@@ -407,19 +406,19 @@ void reverse(int fast) {
     turnFlag = 0;
     reverseCounter = 0;
     if (fast == 1) {
-        left = 118;
+        left  = 118;
         right = 130;
     } else {
-        left = 255;
+        left  = 255;
         right = 255;
     }
     reverseFlag = 1;
     digitalWrite(12, LOW);
-    digitalWrite(9, LOW);
+    digitalWrite(9,  LOW);
     analogWrite(3, left);
     
     digitalWrite(13, LOW);
-    digitalWrite(8, LOW);
+    digitalWrite(8,  LOW);
     analogWrite(11, right);
       
 }
@@ -444,8 +443,6 @@ void setupBlueToothConnection() {
     delay(2000); 
     
     blueToothSerial.print("\r\n+INQ=1\r\n");
-    
-    Serial.println("You may now send data");
     
     delay(2000); 
     
