@@ -54,7 +54,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     private InputStream inputStream = null;
 
-    // Used to write to the bluetooth stream.
     private OutputStream outStream = null;
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -90,16 +89,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                 while (true) {
 
                     try {
-                        // Read from the InputStream
                         if (inputStream != null && inputStream.available() > 0) {
                             bytes = inputStream.read(buffer);
                             Log.d(TAG, buffer.toString());
-                            mHandler.post(new Runnable()
-                            {
-                                public void run()
-                                {
+                            mHandler.post(new Runnable() {
+                                public void run() {
                                     try {
-
                                         String decoded = new String(buffer, "UTF-8");
                                         if (decoded.charAt(0) == '0') {
                                             frontIndicator.setBackgroundColor(Color.BLUE);
@@ -163,10 +158,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         btAdapter.disable();
         Toast.makeText(getApplicationContext(),"Turned off" ,
                 Toast.LENGTH_LONG).show();
-    }
-
-    public void readData() {
-
     }
 
     public void goForward(){
