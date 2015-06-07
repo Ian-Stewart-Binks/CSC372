@@ -216,7 +216,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     /**
      *
      */
-    void goForward(){
+    void goForward() {
         sendData("g");
     }
 
@@ -224,7 +224,7 @@ public class MainActivity extends Activity implements SensorEventListener {
      *
      * @param view
      */
-    void brake(View view){
+    void brake(View view) {
         sendData("b");
     }
 
